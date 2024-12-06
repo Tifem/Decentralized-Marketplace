@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import {products} from "./List_Products"
+// import {products} from "./List_Products";
+// import { addProduct } from "../ContractAp";
 
 const AddProducts = () => {
   const [name, setName] = useState("");
@@ -7,16 +8,18 @@ const AddProducts = () => {
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newProduct = {
-      id: products.length + 1,
-      name,
-      price,
-      description,
-      imageUrl,
-    };
-    products.push(newProduct);
+     console.log(name, price, description, imageUrl);
+    await addProduct(name, description, price, imageUrl);
+    // const newProduct = {
+    //   id: products.length + 1,
+    //   name,
+    //   price,
+    //   description,
+    //   imageUrl,
+    // };
+    // products.push(newProduct);
     setName("");
     setPrice("");
     setDescription("");

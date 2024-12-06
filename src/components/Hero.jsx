@@ -12,7 +12,7 @@ const Hero = () => {
           and full ownership of your transactions.
         </p>
 
-        <div class="hero-buttons">
+        <div className="hero-buttons">
           <Link to="/add-products">
             <button className="btn1">Sell Your Products</button>
           </Link>
