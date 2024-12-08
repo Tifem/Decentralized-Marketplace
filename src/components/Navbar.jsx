@@ -5,7 +5,7 @@ import { walletContext } from '../App';
 const Navbar = () => {
   //  const [isConnected, setIsConnected] = React.useState(false);
 
-   const {connectWallet, isConnected, account} = useContext(walletContext)
+   const {disconnectWallet, connectWallet, isConnected, account} = useContext(walletContext)
     //Connect Wallet
 
   // function disconnectWallet(){
@@ -25,7 +25,7 @@ const Navbar = () => {
         <NavLink to="/transaction">Transaction History</NavLink>
       </div>
       <div>
-        <button onClick={connectWallet} className="wallet">
+        <button onClick={isConnected ? disconnectWallet : connectWallet} className="wallet">
           {isConnected
             ? `${account.slice(0, 6)}...${account.slice(-4, -1)}`
             : "Connect Wallet"}

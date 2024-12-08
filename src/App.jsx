@@ -10,13 +10,19 @@ export const walletContext = createContext({
   isConnected: false,
   account: '',
   connectWallet: () => {},
+  disconnectWallet: () => {}
 });
 
 
 const App = () => {
 
   const[isConnected, setIsConnected] = useState(false);
-  const [account, setAccount] = useState(false)
+  const [account, setAccount] = useState('');
+
+  function disconnectWallet(){
+    setIsConnected(false);
+    setAccount('');
+  }
 
  
     async function connectWallet() {
@@ -54,7 +60,7 @@ const App = () => {
     }
 
   return (
-    <walletContext.Provider value={{ isConnected, account, connectWallet }}>
+    <walletContext.Provider value={{ isConnected, account, connectWallet, disconnectWallet }}>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

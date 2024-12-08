@@ -1,61 +1,33 @@
 import React from 'react'
-
-
-const transactions = [
-  {
-    id: "9CD777EB",
-    date: "08-May-2015",
-    time: "10:55",
-    amount: "-$40.00",
-    payment: "Skrill",
-  },
-  {
-    id: "9CE772EB",
-    date: "06-May-2015",
-    time: "15:05",
-    amount: "-$90.00",
-    payment: "Skrill",
-  },
-  {
-    id: "9CC772WB",
-    date: "01-May-2015",
-    time: "11:15",
-    amount: "-$192.22",
-    payment: "Bank",
-  },
-  {
-    id: "0CG111WB",
-    date: "25-Apr-2015",
-    time: "19:11",
-    amount: "-$122.22",
-    payment: "Bank",
-  },
-  {
-    id: "19F150AC99",
-    date: "18-Apr-2015",
-    time: "11:18",
-    amount: "$222.19",
-    payment: "Reward",
-  },
-  {
-    id: "11CG7290C",
-    date: "10-Apr-2015",
-    time: "23:47",
-    amount: "$58.88",
-    payment: "Cash",
-  },
-  {
-    id: "9CE772EB",
-    date: "02-Apr-2015",
-    time: "15:05",
-    amount: "-$90.00",
-    payment: "Skrill",
-  },
-];
-
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import main from '../ContractAp';
 
 const TransactionHistory = () => {
-  
+    const [transaction, setTransaction] = useState([]);
+    const [contractFunctions, setContractFunctions] = useState(null);
+
+    useEffect(() => {
+      const initializeContract = async () => {
+        const functions = await main();
+        setContractFunctions(functions);
+      };
+      initializeContract();
+    }, []);
+
+    useEffect(() => {
+      const fetchTransactions = async () => {
+        if (contractFunctions) {
+          const tx = await contractFunctions.getTransactions();
+          console.log(tx);
+
+          setTransaction(tx);
+        }
+      };
+      fetchTransactions();
+    }, [contractFunctions]);
+
+
   return (
     <div className="app">
       <header className="header">
@@ -94,19 +66,19 @@ const TransactionHistory = () => {
         <table className="transaction-table">
           <thead>
             <tr>
-              <th>Transfer#</th>
-              <th>Time Stamp</th>
+              <th>Seller Address</th>
+              <th>Buyer Address</th>
+              <th>Date</th>
               <th>Amount</th>
-              <th>Payment</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
-              <tr key={transaction.id}>
-                <td>{transaction.id}</td>
-                <td>{`${transaction.date} ${transaction.time}`}</td>
-                <td>{transaction.amount}</td>
-                <td>{transaction.payment}</td>
+            {transaction.map((transact) => (
+              <tr key={transact.productId}>
+                <td>{`${transact.seller.slice(0,5)}...${transact.seller.slice(-5)}`}</td>
+                <td>{`${transact.buyer.slice(0,5)}...${transact.buyer.slice(-5)}`}</td>
+                <td>{new Date(transact.timestamp.toString() * 1000).toLocaleString() }</td>
+                <td>{ethers.formatEther(transact.amount)}</td>
               </tr>
             ))}
           </tbody>

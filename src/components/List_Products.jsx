@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { TiShoppingCart } from 'react-icons/ti';
 // import { listProducts, buyProduct } from "../ContractAp";
 import { ethers } from "ethers";
@@ -13,26 +13,28 @@ const List_Products = () => {
    const {isConnected} = useContext(walletContext);
   //  const [connected, setConnected] = useState(false);
 
-   useEffect(() => {
-     const getProducts = async () => {
-       //  setProducts(product);
-       if(isConnected){
-         const mainFunction = await main()
+  const getProducts = useCallback(async ()=>{
+     if (isConnected) {
+       const mainFunction = await main();
 
-         console.log(mainFunction);
-         const product = await mainFunction.listProducts();
-         console.log(product)
-         setProducts(product)
-         console.log('product fetch Successfully')
-      }
-     };
+       console.log(mainFunction);
+       const product = await mainFunction.listProducts();
+       const filteredProduct = product.filter((prod) => prod.isSold === false)
+       setProducts(filteredProduct);
+     }
+  }, [isConnected])
+   useEffect(() => {
+     
      getProducts();
-   }, [isConnected]);
+   }, [getProducts]);
 
 
  const handleBuy = async (id,price) => {
+  const mainFunction = await main()
+  await mainFunction.buyProduct(id, price)
     // await buyProduct(id, price);
    alert("Order Placed Successfully");
+   await getProducts()
  };
   return (
     <>
